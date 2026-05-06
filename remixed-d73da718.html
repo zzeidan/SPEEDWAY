@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speedway Express</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#c0392b;--cyan:#e74c3c;--gold:#f59e0b;--green:#16a34a;
+  --orange:#ea580c;--bg:#f0f4ff;--card:#fff;--gray:#6b7280;--dark:#0f172a;
+}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--dark)}
+nav{background:var(--blue);padding:0 1.5rem;display:flex;align-items:center;
+  justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 20px rgba(0,0,0,.4);flex-wrap:wrap;gap:.3rem}
+.logo{font-size:1.3rem;font-weight:900;color:#fff;display:flex;align-items:center;gap:.4rem}
+.logo-icon{background:linear-gradient(135deg,#fff,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-tabs{display:flex;gap:.2rem;flex-wrap:wrap}
+.nav-tabs button{background:none;border:none;color:#94a3b8;cursor:pointer;
+  font-size:.8rem;padding:.4rem .7rem;border-radius:8px;transition:.2s}
+.nav-tabs button.active,.nav-tabs button:hover{background:rgba(255,255,255,.15);color:#fff}
+.btn-cta{background:linear-gradient(135deg,#e74c3c,var(--gold))!important;
+  color:#fff!important;font-weight:700!important;border-radius:20px!important}
+
+.hero{background:linear-gradient(135deg,var(--dark) 0%,var(--blue) 60%,#7b1a1a 100%);
+  padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 20% 50%,rgba(231,76,60,.2),transparent 55%),
+             radial-gradient(ellipse at 80% 50%,rgba(245,158,11,.15),transparent 55%)}
+.route-badge{display:inline-flex;align-items:center;gap:.8rem;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:50px;padding:.5rem 1.5rem;margin-bottom:1.2rem;
+  color:#e0f2fe;font-size:.9rem;font-weight:600;position:relative}
+.flag{font-size:1.4rem}
+.hero h1{font-size:clamp(1.5rem,3.5vw,2.6rem);color:#fff;font-weight:900;
+  line-height:1.2;position:relative;margin-bottom:.7rem}
+.hero h1 .hl{background:linear-gradient(90deg,#fca5a5,var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#94a3b8;font-size:.95rem;max-width:500px;margin:0 auto 1.8rem;position:relative}
+.search-box{display:flex;gap:.5rem;max-width:560px;margin:0 auto 1.2rem;
+  background:rgba(255,255,255,.95);border-radius:50px;
+  padding:.3rem .3rem .3rem 1.1rem;box-shadow:0 8px 30px rgba(0,0,0,.3);position:relative}
+.search-box input{flex:1;border:none;outline:none;font-size:.9rem;background:transparent;color:var(--dark)}
+.search-box button{background:linear-gradient(135deg,var(--blue),var(--cyan));
+  color:#fff;border:none;border-radius:50px;padding:.5rem 1.2rem;
+  font-weight:700;cursor:pointer;font-size:.85rem}
+.filter-pills{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;position:relative}
+.fpill{padding:.3rem .9rem;border-radius:50px;border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.08);color:#cbd5e1;cursor:pointer;font-size:.78rem;font-weight:600;transition:.2s}
+.fpill:hover,.fpill.active{background:var(--cyan);border-color:var(--cyan);color:#fff}
+
+.kpi-strip{display:flex;justify-content:center;gap:2rem;padding:1rem 2rem;
+  background:#fff;border-bottom:1px solid #e5e7eb;flex-wrap:wrap}
+.kpi{text-align:center}
+.kpi .n{font-size:1.3rem;font-weight:900;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.kpi .l{font-size:.72rem;color:var(--gray)}
+
+.main-wrap{max-width:1100px;margin:0 auto;padding:1.5rem 1rem}
+.tabs-bar{display:none}
+.tab-content{display:none}
+.tab-content.show{display:block}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem}
+.card{background:#fff;border-radius:16px;padding:1.2rem;
+  box-shadow:0 2px 12px rgba(0,0,0,.07);transition:.25s;cursor:pointer;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.11)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.card.sea::before{background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.card.air::before{background:linear-gradient(90deg,#7c3aed,#a78bfa)}
+.card.grp::before{background:linear-gradient(90deg,var(--green),#4ade80)}
+.card.exp::before{background:linear-gradient(90deg,var(--orange),var(--gold))}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.7rem}
+.company-avatar{width:40px;height:40px;border-radius:10px;display:flex;
+  align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.95rem}
+.mode-badge{font-size:.7rem;font-weight:700;padding:.2rem .65rem;border-radius:50px}
+.mode-badge.sea{background:#dbeafe;color:#1e40af}
+.mode-badge.air{background:#ede9fe;color:#7c3aed}
+.mode-badge.grp{background:#dcfce7;color:var(--green)}
+.mode-badge.exp{background:#fef3c7;color:var(--orange)}
+.card-title{font-size:.95rem;font-weight:700;margin-bottom:.2rem}
+.card-sub{color:var(--gray);font-size:.82rem;margin-bottom:.7rem}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem}
+.tag{font-size:.7rem;padding:.15rem .5rem;border-radius:6px;background:#f3f4f6;color:var(--gray)}
+.card-foot{display:flex;justify-content:space-between;align-items:center}
+.price{font-weight:800;color:var(--dark);font-size:.9rem}
+.cta-btn{background:linear-gradient(135deg,var(--cyan),var(--blue));
+  color:#fff;border:none;border-radius:8px;padding:.35rem .85rem;
+  font-size:.8rem;font-weight:700;cursor:pointer}
+.cta-btn:hover{opacity:.85}
+
+.trans-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.trans-card{background:#fff;border-radius:16px;padding:1.2rem;text-align:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);transition:.2s}
+.trans-card:hover{transform:translateY(-3px)}
+.trans-logo{width:52px;height:52px;border-radius:13px;margin:0 auto .6rem;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#fff}
+.trans-name{font-weight:800;font-size:.9rem;margin-bottom:.2rem}
+.trans-loc{color:var(--gray);font-size:.78rem;margin-bottom:.4rem}
+.stars{color:var(--gold);font-size:.82rem;margin-bottom:.4rem}
+.modes{display:flex;gap:.3rem;justify-content:center;flex-wrap:wrap;margin-bottom:.7rem}
+.trans-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;
+  padding:.38rem;font-size:.8rem;font-weight:700;cursor:pointer}
+.trans-btn:hover{background:var(--cyan)}
+
+.devis-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:900px;margin:0 auto}
+@media(max-width:640px){.devis-wrap{grid-template-columns:1fr}}
+.devis-form{background:#fff;border-radius:20px;padding:1.5rem;
+  box-shadow:0 4px 20px rgba(0,0,0,.08)}
+.devis-form h3{font-size:1.05rem;font-weight:800;margin-bottom:1rem;color:var(--blue)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.7rem}
+.form-row.single{grid-template-columns:1fr}
+.form-group label{display:block;font-size:.78rem;font-weight:700;color:var(--gray);margin-bottom:.25rem}
+.form-group input,.form-group select{
+  width:100%;padding:.6rem .85rem;border:1.5px solid #e5e7eb;border-radius:10px;
+  font-size:.88rem;outline:none;transition:.2s;font-family:inherit}
+.form-group input:focus,.form-group select:focus{border-color:var(--cyan)}
+.submit-btn{width:100%;margin-top:.8rem;padding:.7rem;
+  background:linear-gradient(135deg,var(--blue),var(--cyan));
+  color:#fff;border:none;border-radius:12px;font-size:.95rem;font-weight:800;cursor:pointer}
+.submit-btn:hover{opacity:.9}
+.success{display:none;background:#dcfce7;color:#16a34a;border-radius:8px;
+  padding:.7rem;text-align:center;font-weight:700;margin-top:.7rem;font-size:.85rem}
+
+.suivi-wrap{max-width:580px;margin:0 auto}
+.track-input{display:flex;gap:.5rem;margin-bottom:1.2rem}
+.track-input input{flex:1;padding:.65rem 1rem;border:1.5px solid #e5e7eb;border-radius:10px;
+  font-size:.9rem;outline:none}
+.track-input button{background:var(--blue);color:#fff;border:none;border-radius:10px;
+  padding:.65rem 1.2rem;font-weight:700;cursor:pointer;font-size:.85rem}
+.timeline{background:#fff;border-radius:16px;padding:1.3rem;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.tl-title{font-weight:800;margin-bottom:.9rem;font-size:.9rem;color:var(--blue)}
+.tl-item{display:flex;gap:.7rem;margin-bottom:.8rem}
+.tl-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.tl-dot.done{background:var(--green)}
+.tl-dot.active{background:var(--cyan);box-shadow:0 0 0 4px rgba(231,76,60,.2)}
+.tl-dot.pending{background:#e5e7eb}
+.tl-label{font-size:.85rem;font-weight:600}
+.tl-date{font-size:.75rem;color:var(--gray)}
+
+.pricing-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;max-width:860px;margin:0 auto}
+.p-card{background:#fff;border-radius:16px;padding:1.3rem;text-align:center;
+  box-shadow:0 2px 12px rgba(0,0,0,.07);transition:.2s;position:relative;overflow:hidden}
+.p-card:hover{transform:translateY(-3px)}
+.p-card.hot{border:2px solid var(--cyan);background:linear-gradient(135deg,#fff5f5,#fee2e2)}
+.p-badge{position:absolute;top:10px;right:-18px;background:var(--cyan);color:#fff;
+  font-size:.62rem;font-weight:700;padding:.18rem 1.8rem;transform:rotate(35deg)}
+.p-icon{font-size:1.6rem;margin-bottom:.4rem}
+.p-name{font-weight:800;font-size:.9rem;margin-bottom:.25rem}
+.p-price{font-size:1.5rem;font-weight:900;color:var(--blue);margin:.25rem 0}
+.p-price small{font-size:.75rem;color:var(--gray);font-weight:400}
+.p-features{list-style:none;text-align:left;margin:.7rem 0 1rem;font-size:.78rem}
+.p-features li{padding:.22rem 0;color:var(--gray);border-bottom:1px solid #f3f4f6}
+.p-features li::before{content:'✓ ';color:var(--green);font-weight:700}
+.p-features li.x::before{content:'✗ ';color:#f87171}
+.p-features li.x{color:#cbd5e1}
+.p-btn{width:100%;padding:.5rem;border:none;border-radius:8px;
+  font-weight:700;font-size:.82rem;cursor:pointer}
+.p-card:not(.hot) .p-btn{background:#f3f4f6;color:var(--dark)}
+.p-card.hot .p-btn{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#fff}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:200;align-items:center;justify-content:center;padding:1rem}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;padding:1.8rem;width:100%;max-width:400px;
+  animation:up .3s ease}
+@keyframes up{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.modal h3{font-size:1rem;font-weight:800;margin-bottom:.9rem;color:var(--blue)}
+.modal input{width:100%;padding:.6rem;border:1.5px solid #e5e7eb;border-radius:8px;
+  font-size:.88rem;outline:none;margin-bottom:.7rem;font-family:inherit}
+.modal input:focus{border-color:var(--cyan)}
+.modal-btns{display:flex;gap:.6rem;justify-content:flex-end}
+.m-cancel{background:#f3f4f6;border:none;border-radius:8px;padding:.5rem 1rem;cursor:pointer;font-size:.85rem}
+.m-ok{background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;
+  border:none;border-radius:8px;padding:.5rem 1.2rem;font-weight:700;cursor:pointer;font-size:.85rem}
+.modal-success{display:none;background:#dcfce7;color:#16a34a;border-radius:8px;
+  padding:.7rem;text-align:center;font-weight:700;margin-top:.7rem;font-size:.85rem}
+
+/* BETA */
+.beta-banner{background:linear-gradient(135deg,#7c3aed,#c026d3);border-radius:20px;
+  padding:1.8rem;text-align:center;color:#fff;margin-bottom:1.3rem}
+.beta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1.3rem}
+.beta-card{background:#fff;border-radius:14px;padding:1.1rem;
+  box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.beta-stats{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap}
+.beta-stat{flex:1;min-width:130px;background:#fff;border-radius:12px;padding:.9rem;
+  text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+
+#calcResult,#calcExp,#calcFcl{border-radius:12px;padding:1rem;margin-top:.5rem;display:none}
+#calcResult{background:#fff;border:2px solid var(--cyan)}
+#calcExp{background:#fff;border:2px dashed var(--gold)}
+#calcFcl{background:#fff;border:2px solid var(--green)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚡ Speedway<span class="logo-icon"> Express</span></div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('offres',this)">Offres</button>
+    <button class="tab-btn" onclick="switchTab('transporteurs',this)">Transporteurs</button>
+    <button class="tab-btn" onclick="switchTab('devis',this)">Devis & Calcul</button>
+    <button class="tab-btn" onclick="switchTab('suivi',this)">Suivi</button>
+    <button class="tab-btn" onclick="switchTab('tarifs',this)">Tarifs</button>
+    <button class="tab-btn" onclick="switchTab('beta',this)">🧪 Bêta</button>
+    <button class="tab-btn btn-cta" onclick="openModal()">Publier une demande</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="route-badge">
+    <span class="flag">🇨🇳</span> Chine
+    <span>✈️ ⛴️ →</span>
+    <span class="flag">🇸🇳</span> Sénégal
+  </div>
+  <h1>La plateforme <span class="hl">fret & logistique</span><br>Speedway Express — Chine → Afrique de l'Ouest</h1>
+  <p>Prestations aériennes, maritimes et terrestres. Comparez, calculez et suivez vos cargaisons en temps réel.</p>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Fret maritime, aérien, groupage..." oninput="filterCards()">
+    <button onclick="filterCards()">🔍 Rechercher</button>
+  </div>
+  <div class="filter-pills">
+    <button class="fpill active" onclick="setF('all',this)">Tout</button>
+    <button class="fpill" onclick="setF('sea',this)">⛴️ Maritime</button>
+    <button class="fpill" onclick="setF('air',this)">✈️ Aérien</button>
+    <button class="fpill" onclick="setF('grp',this)">📦 Groupage</button>
+    <button class="fpill" onclick="setF('exp',this)">⚡ Express</button>
+  </div>
+</section>
+
+<div class="kpi-strip">
+  <div class="kpi"><div class="n" id="kpiOff">8</div><div class="l">Offres actives</div></div>
+  <div class="kpi"><div class="n">47</div><div class="l">Transporteurs</div></div>
+  <div class="kpi"><div class="n">2 300+</div><div class="l">Expéditions</div></div>
+  <div class="kpi"><div class="n">35–45j</div><div class="l">Délai maritime</div></div>
+  <div class="kpi"><div class="n">96%</div><div class="l">Satisfaction</div></div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- OFFRES -->
+  <div class="tab-content show" id="tab-offres">
+    <div class="grid" id="cardsGrid"></div>
+    <div id="noRes" style="display:none;text-align:center;padding:2rem;color:var(--gray)">Aucune offre trouvée.</div>
+  </div>
+
+  <!-- TRANSPORTEURS -->
+  <div class="tab-content" id="tab-transporteurs">
+    <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">🚢 Transporteurs partenaires</h2>
+    <div class="trans-grid" id="transGrid"></div>
+  </div>
+
+  <!-- DEVIS + CALCULATEUR -->
+  <div class="tab-content" id="tab-devis">
+    <div class="devis-wrap">
+      <div class="devis-form" style="background:linear-gradient(135deg,#fff5f5,#fee2e2)">
+        <h3>🧮 Calculateur de tarif</h3>
+        <div class="form-row single">
+          <div class="form-group">
+            <label>Mode de transport</label>
+            <select id="calcMode" onchange="calcTarif()">
+              <option value="air">✈️ Aérien — 9 000 FCFA/kg</option>
+              <option value="lcl">📦 Groupage LCL — 180 000 FCFA/CBM</option>
+              <option value="fcl20">⛴️ FCL 20' — 1 800 000 FCFA forfait</option>
+              <option value="fcl40">⛴️ FCL 40' HC — 2 800 000 FCFA forfait</option>
+              <option value="exp">⚡ Express — Sur devis</option>
+            </select>
+          </div>
+        </div>
+        <div id="airFields">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Poids réel (kg)</label>
+              <input type="number" id="airPoids" placeholder="50" oninput="calcTarif()" min="1">
+            </div>
+            <div class="form-group">
+              <label>L×l×H (cm)</label>
+              <input type="text" id="airDims" placeholder="60x40x30" oninput="calcTarif()">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label>Nombre de colis</label>
+              <input type="number" id="airNb" value="1" oninput="calcTarif()" min="1">
+            </div>
+          </div>
+        </div>
+        <div id="lclFields" style="display:none">
+          <div class="form-row">
+            <div class="form-group"><label>Longueur (m)</label><input type="number" id="lclL" placeholder="1.2" oninput="calcTarif()" step="0.01"></div>
+            <div class="form-group"><label>Largeur (m)</label><input type="number" id="lclW" placeholder="0.8" oninput="calcTarif()" step="0.01"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Hauteur (m)</label><input type="number" id="lclH" placeholder="0.5" oninput="calcTarif()" step="0.01"></div>
+            <div class="form-group"><label>Nb colis</label><input type="number" id="lclNb" value="1" oninput="calcTarif()" min="1"></div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group"><label>Poids total (kg)</label><input type="number" id="lclPoids" placeholder="200" oninput="calcTarif()"></div>
+          </div>
+        </div>
+        <div id="calcResult">
+          <div style="font-size:.78rem;color:var(--gray);margin-bottom:.4rem">📊 Estimation tarifaire</div>
+          <div id="calcDetails" style="font-size:.8rem;color:#475569;margin-bottom:.4rem"></div>
+          <div id="calcTotal" style="font-size:1.3rem;font-weight:900;color:var(--blue)"></div>
+          <div style="font-size:.7rem;color:var(--gray);margin-top:.2rem">* Hors dédouanement</div>
+        </div>
+        <div id="calcExp">
+          <div style="font-size:.88rem;font-weight:700;color:var(--orange)">⚡ Tarif Express — Contactez-nous pour un devis personnalisé.</div>
+        </div>
+        <div id="calcFcl">
+          <div id="calcFclTxt" style="font-size:1.2rem;font-weight:900;color:var(--blue)"></div>
+          <div style="font-size:.7rem;color:var(--gray);margin-top:.2rem">* Forfait conteneur hors dédouanement</div>
+        </div>
+      </div>
+
+      <div class="devis-form">
+        <h3>📋 Demander un devis officiel</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Nom complet</label><input type="text" placeholder="Aminata Diallo"></div>
+          <div class="form-group"><label>Téléphone</label><input type="tel" placeholder="+221 77 000 00 00"></div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group"><label>Email</label><input type="email" placeholder="votre@email.com"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Origine</label>
+            <select><option>Shanghai</option><option>Guangzhou</option><option>Shenzhen</option><option>Ningbo</option><option>Tianjin</option></select>
+          </div>
+          <div class="form-group">
+            <label>Destination</label>
+            <select><option>Dakar, Sénégal</option><option>Abidjan, CI</option><option>Lomé, Togo</option><option>Conakry, Guinée</option></select>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div class="form-group"><label>Marchandise</label><input type="text" placeholder="Ex: Électronique, textile..."></div>
+        </div>
+        <button class="submit-btn" onclick="submitDevis()">📩 Envoyer ma demande</button>
+        <div class="success" id="devisOk">✅ Demande envoyée ! Un expert vous contacte sous 24h.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUIVI -->
+  <div class="tab-content" id="tab-suivi">
+    <div class="suivi-wrap">
+      <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem">📍 Suivi de cargaison</h2>
+      <div class="track-input">
+        <input type="text" id="trackId" placeholder="N° référence (ex: TC-2024-0892)" value="TC-2024-0892">
+        <button onclick="showTrack()">Suivre</button>
+      </div>
+      <div class="timeline" id="timeline" style="display:none">
+        <div class="tl-title">📦 TC-2024-0892 — Shanghai → Dakar</div>
+        <div class="tl-item"><div class="tl-dot done"></div><div><div class="tl-label">✅ Prise en charge à Shanghai</div><div class="tl-date">12 Jan 2024</div></div></div>
+        <div class="tl-item"><div class="tl-dot done"></div><div><div class="tl-label">✅ Départ port de Shanghai</div><div class="tl-date">15 Jan 2024 — MSC Dakar V.241</div></div></div>
+        <div class="tl-item"><div class="tl-dot done"></div><div><div class="tl-label">✅ Transit Port Said (Égypte)</div><div class="tl-date">24 Jan 2024</div></div></div>
+        <div class="tl-item"><div class="tl-dot active"></div><div><div class="tl-label">🔵 En mer — Côte Atlantique</div><div class="tl-date">02 Fév 2024 — ETA Dakar : 18 Fév</div></div></div>
+        <div class="tl-item"><div class="tl-dot pending"></div><div><div class="tl-label">⏳ Arrivée Port de Dakar</div><div class="tl-date">Estimé : 18 Fév 2024</div></div></div>
+        <div class="tl-item"><div class="tl-dot pending"></div><div><div class="tl-label">⏳ Dédouanement DGD</div><div class="tl-date">Estimé : 19–21 Fév</div></div></div>
+        <div class="tl-item"><div class="tl-dot pending"></div><div><div class="tl-label">⏳ Livraison finale</div><div class="tl-date">Estimé : 22 Fév 2024</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TARIFS -->
+  <div class="tab-content" id="tab-tarifs">
+    <h2 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;text-align:center">💎 Nos offres d'abonnement</h2>
+    <div class="pricing-wrap" id="pricingWrap"></div>
+    <div style="display:flex;gap:.8rem;justify-content:center;margin-top:1.2rem;flex-wrap:wrap">
+      <span style="background:#f1f5f9;border-radius:50px;padding:.35rem .9rem;font-size:.78rem;color:var(--gray)">✅ Paiement sécurisé</span>
+      <span style="background:#f1f5f9;border-radius:50px;padding:.35rem .9rem;font-size:.78rem;color:var(--gray)">📱 Wave / Orange Money</span>
+      <span style="background:#f1f5f9;border-radius:50px;padding:.35rem .9rem;font-size:.78rem;color:var(--gray)">🔄 Sans engagement</span>
+    </div>
+  </div>
+
+  <!-- BETA -->
+  <div class="tab-content" id="tab-beta">
+    <div style="max-width:800px;margin:0 auto">
+      <div class="beta-banner">
+        <div style="font-size:2rem;margin-bottom:.4rem">🧪</div>
+        <h2 style="font-size:1.3rem;font-weight:900;margin-bottom:.4rem">Programme Bêta — Speedway Express</h2>
+        <p style="opacity:.85;font-size:.88rem;margin-bottom:.9rem">Accès exclusif, fonctionnalités en avant-première. Rejoignez les premiers testeurs.</p>
+        <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap">
+          <span style="background:rgba(255,255,255,.2);border-radius:50px;padding:.3rem .9rem;font-size:.78rem">✅ Accès gratuit</span>
+          <span style="background:rgba(255,255,255,.2);border-radius:50px;padding:.3rem .9rem;font-size:.78rem">🎁 Réductions bêta</span>
+          <span style="background:rgba(255,255,255,.2);border-radius:50px;padding:.3rem .9rem;font-size:.78rem">📊 Dashboard avancé</span>
+        </div>
+      </div>
+
+      <h3 style="font-size:1rem;font-weight:800;margin-bottom:.9rem;color:var(--blue)">💰 Modèles de monétisation</h3>
+      <div class="beta-grid">
+        <div class="beta-card" style="border-top:4px solid var(--gold)">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">🏷️</div>
+          <div style="font-weight:800;margin-bottom:.25rem;font-size:.9rem">Commission / expédition</div>
+          <div style="font-size:.8rem;color:var(--gray)">2–5% sur chaque fret réservé via la plateforme.</div>
+        </div>
+        <div class="beta-card" style="border-top:4px solid var(--cyan)">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">💎</div>
+          <div style="font-weight:800;margin-bottom:.25rem;font-size:.9rem">Abonnements Pro</div>
+          <div style="font-size:.8rem;color:var(--gray)">25 000–75 000 FCFA/mois pour transitaires.</div>
+        </div>
+        <div class="beta-card" style="border-top:4px solid var(--green)">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">📢</div>
+          <div style="font-weight:800;margin-bottom:.25rem;font-size:.9rem">Publicité premium</div>
+          <div style="font-size:.8rem;color:var(--gray)">Emplacements sponsorisés pour transporteurs.</div>
+        </div>
+        <div class="beta-card" style="border-top:4px solid #7c3aed">
+          <div style="font-size:1.4rem;margin-bottom:.4rem">📦</div>
+          <div style="font-weight:800;margin-bottom:.25rem;font-size:.9rem">Leads qualifiés</div>
+          <div style="font-size:.8rem;color:var(--gray)">Vente de leads aux transporteurs partenaires.</div>
+        </div>
+      </div>
+
+      <div class="devis-form">
+        <h3 style="color:#7c3aed">🚀 Rejoindre le programme bêta</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Nom complet</label><input type="text" placeholder="Moussa Sall"></div>
+          <div class="form-group"><label>Email</label><input type="email" placeholder="votre@email.com"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Téléphone</label><input type="tel" placeholder="+221 77 000 00 00"></div>
+          <div class="form-group">
+            <label>Profil</label>
+            <select><option>Chargeur / Importateur</option><option>Transitaire</option><option>Transporteur</option><option>Investisseur</option></select>
+          </div>
+        </div>
+        <button class="submit-btn" style="background:linear-gradient(135deg,#7c3aed,#c026d3)" onclick="submitBeta()">🧪 Rejoindre la bêta</button>
+        <div class="success" id="betaOk">🎉 Bienvenue ! Accès envoyé sous 48h.</div>
+      </div>
+
+      <div class="beta-stats">
+        <div class="beta-stat"><div style="font-size:1.3rem;font-weight:900;color:#7c3aed">127</div><div style="font-size:.72rem;color:var(--gray)">Bêta-testeurs</div></div>
+        <div class="beta-stat"><div style="font-size:1.3rem;font-weight:900;color:var(--cyan)">23</div><div style="font-size:.72rem;color:var(--gray)">Places restantes</div></div>
+        <div class="beta-stat"><div style="font-size:1.1rem;font-weight:900;color:var(--green)">Juin 2026</div><div style="font-size:.72rem;color:var(--gray)">Lancement officiel</div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main-wrap -->
+
+<!-- MODAL -->
+<div class="overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>📢 Publier une demande</h3>
+    <input type="text" placeholder="Nom & prénom">
+    <input type="email" placeholder="Email professionnel">
+    <input type="tel" placeholder="Téléphone / WhatsApp">
+    <input type="text" placeholder="Description de votre besoin logistique">
+    <div class="modal-btns">
+      <button class="m-cancel" onclick="closeModal()">Annuler</button>
+      <button class="m-ok" onclick="submitModal()">Envoyer</button>
+    </div>
+    <div class="modal-success" id="modalOk">✅ Demande publiée !</div>
+  </div>
+</div>
+
+<script>
+var avColors=['#c0392b','#0891b2','#16a34a','#7c3aed','#ea580c','#be185d','#0369a1','#b45309'];
+function getC(i){return avColors[i%avColors.length];}
+function ini(n){return n.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();}
+
+var offers=[
+  {id:1,title:"Fret Maritime FCL 20'",company:'Sino Freight SN',type:'sea',price:'1 800 000 FCFA',delay:'38 jours',tags:['Shanghai→Dakar','FCL','Dédouanement inclus'],route:'Shanghai'},
+  {id:2,title:'Fret Aérien Express',company:'AirCargo Dakar',type:'air',price:'9 000 FCFA/kg',delay:'5–7 jours',tags:['Guangzhou→Dakar','Urgent','Porte-à-porte'],route:'Guangzhou'},
+  {id:3,title:'Groupage LCL',company:'OLS Logistics',type:'grp',price:'180 000 FCFA/CBM',delay:'42 jours',tags:['Shenzhen→Dakar','LCL','Petit volume'],route:'Shenzhen'},
+  {id:4,title:'Express DDP',company:'QuickShip',type:'exp',price:'Sur devis',delay:'3–5 jours',tags:['Shanghai→Dakar','Taxes incluses','DDP'],route:'Shanghai'},
+  {id:5,title:"Conteneur 40' HC",company:'STMS Logistics',type:'sea',price:'2 800 000 FCFA',delay:'40 jours',tags:['Ningbo→Dakar','FCL 40HC'],route:'Ningbo'},
+  {id:6,title:'Fret Aérien Standard',company:'TopWay Shipping',type:'air',price:'9 000 FCFA/kg',delay:'7–10 jours',tags:['Tianjin→Dakar','Suivi live'],route:'Tianjin'},
+  {id:7,title:'Groupage Consolidé',company:'Dantful Intl',type:'grp',price:'180 000 FCFA/CBM',delay:'45 jours',tags:['Guangzhou→Dakar','Départ hebdo'],route:'Guangzhou'},
+  {id:8,title:'Service Porte-à-Porte',company:'Ubest Shipping',type:'exp',price:'Sur devis',delay:'8–12 jours',tags:['Toute Chine→Dakar','GPS'],route:'Multi'},
+];
+
+var transporters=[
+  {name:'STMS Logistics',loc:'Dakar, Sénégal',modes:['Maritime','Aérien','Douane'],stars:'★★★★★',rating:'4.9',col:'#c0392b'},
+  {name:'Dantful Intl',loc:'Guangzhou, Chine',modes:['FCL','LCL','Express'],stars:'★★★★☆',rating:'4.7',col:'#0891b2'},
+  {name:'OLS Logistics',loc:'Dakar / Shanghai',modes:['Groupage','Maritime'],stars:'★★★★★',rating:'4.8',col:'#7c3aed'},
+  {name:'Ubest Shipping',loc:'Shenzhen, Chine',modes:['Aérien','DDP','Express'],stars:'★★★★☆',rating:'4.6',col:'#ea580c'},
+  {name:'TopWay Shipping',loc:'Tianjin, Chine',modes:['FCL','Aérien'],stars:'★★★★★',rating:'4.8',col:'#16a34a'},
+  {name:'AirCargo Dakar',loc:'Dakar, Sénégal',modes:['Aérien','Urgent'],stars:'★★★★☆',rating:'4.5',col:'#be185d'},
+  {name:'QuickShip Express',loc:'Shanghai, Chine',modes:['DDP','Express'],stars:'★★★★★',rating:'4.9',col:'#0369a1'},
+  {name:'Sino Freight SN',loc:'Dakar / Ningbo',modes:['Maritime','Douane'],stars:'★★★★☆',rating:'4.7',col:'#b45309'},
+];
+
+var plans=[
+  {icon:'🆓',name:'Gratuit',price:'0',unit:'FCFA/mois',cl:'',feats:['1 demande/mois','Annuaire transporteurs','Devis basique','x Suivi cargaison','x Analytics'],btn:'Commencer'},
+  {icon:'🚀',name:'Starter',price:'25 000',unit:'FCFA/mois',cl:'',feats:['10 demandes/mois','Annuaire complet','Devis automatiques','Suivi cargaison','x Analytics avancés'],btn:'Choisir Starter'},
+  {icon:'💼',name:'Pro',price:'75 000',unit:'FCFA/mois',cl:'hot',badge:'⭐ POPULAIRE',feats:['Demandes illimitées','Priorité transporteurs','Devis temps réel','Suivi GPS live','Analytics & rapports'],btn:'Choisir Pro'},
+  {icon:'🏢',name:'Entreprise',price:'Sur devis',unit:'',cl:'',feats:['Tout du plan Pro','API & ERP','Manager dédié','SLA garanti','Contrat perso'],btn:'Nous contacter'},
+];
+
+var activeF='all';
+
+function renderOffers(){
+  var q=document.getElementById('searchInput').value.toLowerCase();
+  var grid=document.getElementById('cardsGrid');
+  var filtered=offers.filter(function(o){
+    var mf=activeF==='all'||o.type===activeF;
+    var ms=!q||o.title.toLowerCase().indexOf(q)>=0||o.company.toLowerCase().indexOf(q)>=0||
+      o.tags.some(function(t){return t.toLowerCase().indexOf(q)>=0;});
+    return mf&&ms;
+  });
+  document.getElementById('noRes').style.display=filtered.length?'none':'block';
+  document.getElementById('kpiOff').textContent=offers.length;
+  var modeLabel={sea:'⛴️ Maritime',air:'✈️ Aérien',grp:'📦 Groupage',exp:'⚡ Express'};
+  grid.innerHTML=filtered.map(function(o,i){
+    return '<div class="card '+o.type+'">'+
+      '<div class="card-head">'+
+        '<div class="company-avatar" style="background:'+getC(i)+'">'+ini(o.company)+'</div>'+
+        '<span class="mode-badge '+o.type+'">'+modeLabel[o.type]+'</span>'+
+      '</div>'+
+      '<div class="card-title">'+o.title+'</div>'+
+      '<div class="card-sub">🏢 '+o.company+' &nbsp;•&nbsp; ⏱ '+o.delay+' &nbsp;•&nbsp; 📍 '+o.route+'→DKR</div>'+
+      '<div class="tags">'+o.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('')+'</div>'+
+      '<div class="card-foot">'+
+        '<span class="price">💰 '+o.price+'</span>'+
+        '<button class="cta-btn" onclick="switchTab(\'devis\',document.querySelector(\'.nav-tabs .tab-btn:nth-child(3)\'))">Devis</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function renderTransporters(){
+  document.getElementById('transGrid').innerHTML=transporters.map(function(t){
+    return '<div class="trans-card">'+
+      '<div class="trans-logo" style="background:'+t.col+'">'+ini(t.name)+'</div>'+
+      '<div class="trans-name">'+t.name+'</div>'+
+      '<div class="trans-loc">📍 '+t.loc+'</div>'+
+      '<div class="stars">'+t.stars+' <span style="color:var(--gray);font-size:.73rem">('+t.rating+')</span></div>'+
+      '<div class="modes">'+t.modes.map(function(m){return '<span style="background:#f0f9ff;color:var(--cyan);font-size:.7rem;padding:.13rem .48rem;border-radius:6px;font-weight:600">'+m+'</span>';}).join('')+'</div>'+
+      '<button class="trans-btn" onclick="openModal()">Contacter</button>'+
+    '</div>';
+  }).join('');
+}
+
+function renderPricing(){
+  document.getElementById('pricingWrap').innerHTML=plans.map(function(p){
+    return '<div class="p-card '+p.cl+'">'+
+      (p.badge?'<div class="p-badge">'+p.badge+'</div>':'')+
+      '<div class="p-icon">'+p.icon+'</div>'+
+      '<div class="p-name">'+p.name+'</div>'+
+      '<div class="p-price">'+p.price+'<small>'+(p.unit?' '+p.unit:'')+'</small></div>'+
+      '<ul class="p-features">'+p.feats.map(function(f){
+        var x=f.indexOf('x ')===0;
+        return '<li class="'+(x?'x':'')+'">'+f.replace(/^x /,'')+'</li>';
+      }).join('')+'</ul>'+
+      '<button class="p-btn" onclick="openModal()">'+p.btn+'</button>'+
+    '</div>';
+  }).join('');
+}
+
+function setF(f,el){
+  activeF=f;
+  document.querySelectorAll('.fpill').forEach(function(p){p.classList.remove('active');});
+  el.classList.add('active');
+  renderOffers();
+}
+
+function filterCards(){renderOffers();}
+
+function switchTab(id,el){
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('show');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  var tc=document.getElementById('tab-'+id);
+  if(tc) tc.classList.add('show');
+  if(el) el.classList.add('active');
+}
+
+function showTrack(){
+  var tl=document.getElementById('timeline');
+  if(tl) tl.style.display='block';
+}
+
+function openModal(){
+  var el=document.getElementById('modalOk');
+  if(el) el.style.display='none';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show');}
+
+function submitModal(){
+  var el=document.getElementById('modalOk');
+  if(el) el.style.display='block';
+  setTimeout(closeModal,2000);
+}
+
+function submitDevis(){
+  var el=document.getElementById('devisOk');
+  if(el){el.style.display='block';setTimeout(function(){el.style.display='none';},3000);}
+}
+
+function submitBeta(){
+  var el=document.getElementById('betaOk');
+  if(el){el.style.display='block';setTimeout(function(){el.style.display='none';},3500);}
+}
+
+function calcTarif(){
+  var mode=document.getElementById('calcMode').value;
+  document.getElementById('airFields').style.display=mode==='air'?'block':'none';
+  document.getElementById('lclFields').style.display=mode==='lcl'?'block':'none';
+  document.getElementById('calcResult').style.display='none';
+  document.getElementById('calcExp').style.display='none';
+  document.getElementById('calcFcl').style.display='none';
+
+  if(mode==='exp'){document.getElementById('calcExp').style.display='block';return;}
+
+  if(mode==='fcl20'||mode==='fcl40'){
+    var p=mode==='fcl20'?'1 800 000':'2 800 000';
+    var lbl=mode==='fcl20'?"20'":"40' HC";
+    document.getElementById('calcFclTxt').textContent='⛴️ Forfait FCL '+lbl+' : '+p+' FCFA';
+    document.getElementById('calcFcl').style.display='block';
+    return;
+  }
+
+  if(mode==='air'){
+    var poids=parseFloat(document.getElementById('airPoids').value)||0;
+    var dimsStr=document.getElementById('airDims').value;
+    var dims=dimsStr.split(/[xX×,\s]+/).map(Number);
+    var nb=parseInt(document.getElementById('airNb').value)||1;
+    var volPoids=0;
+    if(dims.length===3&&dims[0]>0&&dims[1]>0&&dims[2]>0){
+      volPoids=((dims[0]*dims[1]*dims[2])/6000)*nb;
+    }
+    var taxPoids=Math.max(poids,volPoids);
+    if(taxPoids<1){return;}
+    var total=Math.round(taxPoids*9000).toLocaleString('fr-FR');
+    document.getElementById('calcDetails').innerHTML=
+      'Poids réel : <b>'+poids+' kg</b> | Poids vol. : <b>'+volPoids.toFixed(2)+' kg</b><br>'+
+      'Poids taxable : <b>'+taxPoids.toFixed(2)+' kg</b> × 9 000 FCFA/kg';
+    document.getElementById('calcTotal').textContent='💰 '+total+' FCFA';
+    document.getElementById('calcResult').style.display='block';
+    return;
+  }
+
+  if(mode==='lcl'){
+    var L=parseFloat(document.getElementById('lclL').value)||0;
+    var W=parseFloat(document.getElementById('lclW').value)||0;
+    var H=parseFloat(document.getElementById('lclH').value)||0;
+    var nbL=parseInt(document.getElementById('lclNb').value)||1;
+    var poidsL=parseFloat(document.getElementById('lclPoids').value)||0;
+    if(L===0||W===0||H===0){return;}
+    var cbm=L*W*H*nbL;
+    var dens=(poidsL>0&&cbm>0)?poidsL/cbm:0;
+    var rate=180000;
+    if(dens>300){rate=310000;}
+    var totalL=Math.round(cbm*rate).toLocaleString('fr-FR');
+    document.getElementById('calcDetails').innerHTML=
+      'Volume : <b>'+cbm.toFixed(3)+' CBM</b>'+(dens>0?' | Densité : <b>'+dens.toFixed(0)+' kg/m³</b>':'')+
+      '<br>Tarif : <b>'+rate.toLocaleString('fr-FR')+' FCFA/CBM</b>';
+    document.getElementById('calcTotal').textContent='💰 '+totalL+' FCFA';
+    document.getElementById('calcResult').style.display='block';
+  }
+}
+
+document.getElementById('modalOverlay').addEventListener('click',function(e){
+  if(e.target.id==='modalOverlay'){closeModal();}
+});
+
+renderOffers();
+renderTransporters();
+renderPricing();
+</script>
+</body>
+</html>
