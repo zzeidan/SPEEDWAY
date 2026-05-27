@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELIVR'SN — Livraison Express Sénégal</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --org:#F97316;--org2:#FB923C;--dk:#0F172A;--dk2:#1E293B;
+  --grn:#22C55E;--grn2:#16A34A;--wh:#FFFFFF;
+  --gr:#64748B;--lg:#F8FAFC;--bd:#E2E8F0;
+  --red:#EF4444;--yl:#EAB308;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Sora',sans-serif;background:var(--lg);color:var(--dk);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:999;
+  background:rgba(15,23,42,0.97);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(249,115,22,0.2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:60px}
+.nav-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
+.nav-ico{width:34px;height:34px;background:var(--org);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:18px}
+.nav-name{color:#fff;font-weight:800;font-size:18px;letter-spacing:-0.5px}
+.nav-name span{color:var(--org)}
+.nav-tabs{display:flex;gap:2px}
+.ntab{color:#94A3B8;border:none;background:transparent;padding:7px 13px;
+  border-radius:6px;font-size:12px;cursor:pointer;font-family:'Sora',sans-serif;
+  transition:all .15s;font-weight:500}
+.ntab:hover{color:#fff;background:rgba(255,255,255,0.06)}
+.ntab.on{color:var(--org);background:rgba(249,115,22,0.1)}
+.nav-actions{display:flex;gap:8px}
+.btn-livreur{background:var(--org);color:#fff;border:none;border-radius:8px;
+  padding:8px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif}
+.btn-client{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.2);
+  border-radius:8px;padding:8px 18px;font-size:12px;cursor:pointer;font-family:'Sora',sans-serif}
+
+/* PAGES */
+.pg{display:none;padding-top:60px;min-height:100vh;animation:fi .25s ease}
+.pg.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:var(--dk);min-height:92vh;display:flex;align-items:center;
+  position:relative;overflow:hidden;padding:60px 2rem}
+.hero-bg{position:absolute;inset:0;
+  background:radial-gradient(ellipse at 80% 50%,rgba(249,115,22,0.12) 0%,transparent 60%),
+             radial-gradient(ellipse at 20% 80%,rgba(34,197,94,0.06) 0%,transparent 50%)}
+.hero-grid{position:absolute;inset:0;opacity:0.04;
+  background-image:linear-gradient(rgba(255,255,255,.3) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.3) 1px,transparent 1px);
+  background-size:40px 40px}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;
+  grid-template-columns:1.1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;
+  background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.25);
+  border-radius:20px;padding:5px 14px;margin-bottom:24px;font-size:11px;color:var(--org)}
+.hero h1{color:#fff;font-size:54px;font-weight:800;line-height:1.05;margin-bottom:18px;letter-spacing:-1.5px}
+.hero h1 span{color:var(--org)}
+.hero-sub{color:#94A3B8;font-size:16px;line-height:1.7;max-width:500px;
+  margin-bottom:36px;font-weight:300}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.hbtn-org{background:var(--org);color:#fff;border:none;border-radius:10px;
+  padding:14px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;
+  transition:all .2s}
+.hbtn-org:hover{background:var(--org2);transform:translateY(-2px)}
+.hbtn-grn{background:var(--grn);color:#fff;border:none;border-radius:10px;
+  padding:14px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;
+  transition:all .2s}
+.hbtn-grn:hover{background:var(--grn2);transform:translateY(-2px)}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.hstat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:16px}
+.hstat-v{font-size:24px;font-weight:800;color:var(--org)}
+.hstat-l{font-size:11px;color:#64748B;margin-top:3px}
+/* MAP MOCKUP */
+.map-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;overflow:hidden;position:relative}
+.map-header{background:rgba(255,255,255,0.05);padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,0.06)}
+.map-title{color:#fff;font-size:13px;font-weight:600}
+.map-live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--grn)}
+.map-live::before{content:'';width:6px;height:6px;background:var(--grn);
+  border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.map-area{height:260px;background:linear-gradient(135deg,#0F2027,#203A43,#2C5364);
+  position:relative;overflow:hidden}
+.map-road{position:absolute;background:rgba(255,255,255,0.06)}
+.map-road.h{height:2px;left:0;right:0}
+.map-road.v{width:2px;top:0;bottom:0}
+.map-pin{position:absolute;width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  box-shadow:0 0 0 4px rgba(255,255,255,0.1);cursor:pointer;
+  animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.map-pin.org{background:var(--org)}
+.map-pin.grn{background:var(--grn)}
+.map-pin.yl{background:var(--yl)}
+.map-label{position:absolute;background:rgba(15,23,42,0.9);color:#fff;
+  font-size:9px;padding:2px 6px;border-radius:4px;white-space:nowrap;top:-22px;left:50%;transform:translateX(-50%)}
+.map-footer{padding:10px 16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.map-stat{background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 12px;text-align:center}
+.map-stat-v{font-size:16px;font-weight:700;color:var(--org)}
+.map-stat-l{font-size:9px;color:#64748B}
+
+/* SECTION */
+.sec{padding:70px 2rem}
+.sec-inner{max-width:1100px;margin:0 auto}
+.sec-tag{font-size:11px;letter-spacing:2.5px;font-weight:600;text-transform:uppercase;margin-bottom:10px;color:var(--org)}
+.sec-title{font-size:36px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;color:var(--dk)}
+.sec-sub{font-size:15px;color:var(--gr);line-height:1.6;font-weight:300;max-width:560px}
+.sec-hd{margin-bottom:48px}.sec-hd.c{text-align:center}.sec-hd.c .sec-sub{margin:0 auto}
+
+/* HOW IT WORKS */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.step{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:24px;position:relative}
+.step-num{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;margin-bottom:16px}
+.step-title{font-size:15px;font-weight:700;color:var(--dk);margin-bottom:6px}
+.step-desc{font-size:13px;color:var(--gr);line-height:1.6;font-weight:300}
+.step-ico{font-size:24px;margin-bottom:12px}
+
+/* LIVREUR FORM */
+.reg-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:28px;max-width:1000px;margin:0 auto}
+.reg-info{background:var(--dk);border-radius:16px;padding:32px}
+.reg-info-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px}
+.reg-info-sub{color:#94A3B8;font-size:13px;line-height:1.6;margin-bottom:28px;font-weight:300}
+.reg-perks li{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;list-style:none}
+.reg-perks .pk-ico{width:32px;height:32px;background:rgba(249,115,22,0.15);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.reg-perks .pk-t{color:#fff;font-size:13px;font-weight:600}
+.reg-perks .pk-s{color:#64748B;font-size:12px;font-weight:300}
+.reg-form{background:#fff;border:1.5px solid var(--bd);border-radius:16px;padding:32px}
+.form-title{font-size:20px;font-weight:800;color:var(--dk);margin-bottom:6px}
+.form-sub{font-size:13px;color:var(--gr);margin-bottom:24px;font-weight:300}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.f-grp{margin-bottom:12px}
+.f-lbl{display:block;font-size:12px;font-weight:600;color:var(--dk);margin-bottom:5px}
+.f-inp,.f-sel,.f-ta{width:100%;padding:10px 13px;border:1.5px solid var(--bd);
+  border-radius:8px;font-size:13px;color:var(--dk);font-family:'Sora',sans-serif;
+  outline:none;transition:border-color .2s;background:#fff}
+.f-inp:focus,.f-sel:focus,.f-ta:focus{border-color:var(--org)}
+.f-ta{resize:vertical}
+.vehicle-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.veh-opt{border:2px solid var(--bd);border-radius:10px;padding:12px;cursor:pointer;
+  text-align:center;transition:all .2s}
+.veh-opt:hover,.veh-opt.sel{border-color:var(--org);background:rgba(249,115,22,0.04)}
+.veh-ico{font-size:24px;margin-bottom:4px}
+.veh-lbl{font-size:12px;font-weight:600;color:var(--dk)}
+.veh-sub{font-size:10px;color:var(--gr)}
+.geo-btn{width:100%;background:rgba(34,197,94,0.08);border:1.5px solid var(--grn);
+  color:var(--grn2);border-radius:8px;padding:10px;font-size:13px;font-weight:600;
+  cursor:pointer;font-family:'Sora',sans-serif;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-org{width:100%;background:var(--org);color:#fff;border:none;border-radius:10px;
+  padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;
+  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-org:hover{background:var(--org2)}
+.submit-grn{width:100%;background:var(--grn);color:#fff;border:none;border-radius:10px;
+  padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;
+  transition:all .2s}
+.submit-grn:hover{background:var(--grn2)}
+
+/* SEARCH LIVREUR */
+.search-layout{display:grid;grid-template-columns:1fr 1.6fr;gap:24px;max-width:1100px;margin:0 auto}
+.search-panel{background:#fff;border:1.5px solid var(--bd);border-radius:16px;padding:28px}
+.search-title{font-size:18px;font-weight:800;color:var(--dk);margin-bottom:6px}
+.search-sub{font-size:13px;color:var(--gr);margin-bottom:20px;font-weight:300}
+.type-tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.type-tab{padding:7px 14px;border:1.5px solid var(--bd);border-radius:20px;
+  font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;background:#fff;
+  font-family:'Sora',sans-serif;color:var(--gr)}
+.type-tab.on{border-color:var(--org);color:var(--org);background:rgba(249,115,22,0.06)}
+.urgency-slider{display:flex;gap:6px;margin-bottom:12px}
+.urg-btn{flex:1;padding:8px;border:1.5px solid var(--bd);border-radius:8px;
+  font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:all .15s;
+  font-family:'Sora',sans-serif;background:#fff}
+.urg-btn.on.now{border-color:var(--red);background:rgba(239,68,68,0.06);color:var(--red)}
+.urg-btn.on.prog{border-color:var(--yl);background:rgba(234,179,8,0.06);color:#854F0B}
+.urg-btn.on.sched{border-color:var(--grn);background:rgba(34,197,94,0.06);color:var(--grn2)}
+.results-map{background:var(--dk2);border-radius:14px;overflow:hidden}
+.results-header{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex;align-items:center;justify-content:space-between}
+.results-title{color:#fff;font-size:14px;font-weight:600}
+.results-count{font-size:11px;color:var(--org);font-weight:600}
+.live-map{height:240px;background:linear-gradient(135deg,#0F2027,#203A43,#2C5364);
+  position:relative;overflow:hidden}
+.livreur-cards{padding:14px}
+.lcard{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;padding:14px;margin-bottom:10px;display:flex;gap:14px;
+  align-items:center;cursor:pointer;transition:all .15s}
+.lcard:hover{background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.3)}
+.lcard-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:18px;flex-shrink:0;font-weight:700;font-size:16px;color:#fff}
+.lcard-name{color:#fff;font-size:13px;font-weight:600}
+.lcard-info{color:#64748B;font-size:11px;margin-top:2px}
+.lcard-rating{color:var(--yl);font-size:11px;font-weight:600}
+.lcard-dist{color:var(--grn);font-size:11px;font-weight:600}
+.lcard-actions{margin-left:auto;display:flex;flex-direction:column;gap:6px}
+.btn-contact{background:var(--org);color:#fff;border:none;border-radius:7px;
+  padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap}
+.btn-track{background:rgba(34,197,94,0.15);color:var(--grn);border:1px solid rgba(34,197,94,0.3);
+  border-radius:7px;padding:7px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap}
+.lcard-badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;margin-top:3px}
+.badge-dispo{background:rgba(34,197,94,0.15);color:var(--grn2)}
+.badge-busy{background:rgba(234,179,8,0.15);color:#854F0B}
+.badge-off{background:rgba(100,116,139,0.15);color:var(--gr)}
+
+/* DASHBOARD LIVREUR */
+.dash-wrap{display:grid;grid-template-columns:220px 1fr;gap:0;min-height:80vh;
+  background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;max-width:1100px;margin:0 auto}
+.dash-side{background:var(--dk);padding:24px 18px}
+.dash-user{display:flex;align-items:center;gap:10px;margin-bottom:28px;
+  padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.dash-av{width:42px;height:42px;border-radius:50%;background:var(--org);
+  display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff}
+.dash-un{color:#fff;font-size:13px;font-weight:600}
+.dash-ur{color:#64748B;font-size:10px}
+.dash-mi{display:flex;align-items:center;gap:9px;padding:9px 10px;
+  border-radius:7px;cursor:pointer;margin-bottom:3px;color:#64748B;font-size:12px;transition:all .15s}
+.dash-mi:hover{background:rgba(255,255,255,0.05);color:#fff}
+.dash-mi.on{background:rgba(249,115,22,0.15);color:var(--org);border:1px solid rgba(249,115,22,0.2)}
+.dash-mi-ico{font-size:15px}
+.dash-main{padding:24px;background:var(--lg)}
+.dash-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.dash-greeting{font-size:20px;font-weight:800;color:var(--dk)}
+.toggle-status{display:flex;align-items:center;gap:8px}
+.toggle-lbl{font-size:12px;color:var(--gr)}
+.toggle{width:40px;height:22px;background:var(--grn);border-radius:11px;cursor:pointer;
+  position:relative;transition:background .2s}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;
+  border-radius:50%;top:2px;right:2px;transition:right .2s}
+.toggle.off{background:#CBD5E1}
+.toggle.off::after{right:20px}
+.dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.dk-card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:16px}
+.dk-v{font-size:22px;font-weight:800;color:var(--dk)}
+.dk-l{font-size:11px;color:var(--gr);margin-top:3px}
+.dk-d{font-size:11px;font-weight:600;margin-top:2px}
+.pos{color:var(--grn)}.neg{color:var(--red)}
+.livraisons-table{background:#fff;border:1px solid var(--bd);border-radius:12px;overflow:hidden}
+.lt-hd{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1fr;gap:0;
+  background:var(--lg);border-bottom:1px solid var(--bd);padding:10px 14px}
+.lt-th{font-size:10px;color:var(--gr);font-weight:600;letter-spacing:.5px}
+.lt-row{display:grid;grid-template-columns:2fr 1.2fr 1fr 1fr 1fr;gap:0;
+  padding:12px 14px;border-bottom:1px solid var(--lg);align-items:center}
+.lt-row:last-child{border-bottom:none}
+.lt-cell{font-size:12px;color:var(--dk)}
+.lt-cell.m{color:var(--gr);font-size:11px}
+.st{display:inline-block;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:600}
+.st.done{background:#DCFCE7;color:var(--grn2)}
+.st.go{background:#FEF9C3;color:#854F0B}
+.st.wait{background:#DBEAFE;color:#1D4ED8}
+
+/* SUCCESS */
+.success-box{text-align:center;padding:48px 24px}
+.success-ico{font-size:64px;margin-bottom:20px}
+.success-t{font-size:24px;font-weight:800;color:var(--dk);margin-bottom:8px}
+.success-s{color:var(--gr);font-size:14px;margin-bottom:24px;font-weight:300}
+.success-card{background:var(--lg);border:1px solid var(--bd);border-radius:12px;
+  padding:16px 20px;text-align:left;max-width:400px;margin:0 auto 20px}
+.sc-lbl{font-size:10px;color:var(--org);font-weight:700;margin-bottom:3px;letter-spacing:1px}
+.sc-val{font-size:13px;color:var(--dk)}
+.reset-btn{background:var(--org);color:#fff;border:none;border-radius:8px;
+  padding:10px 24px;cursor:pointer;font-size:13px;font-family:'Sora',sans-serif;font-weight:600}
+
+/* FOOTER */
+footer{background:var(--dk);padding:48px 2rem 24px}
+.ft-inner{max-width:1100px;margin:0 auto}
+.ft-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px}
+.ft-brand p{color:#475569;font-size:13px;line-height:1.7;margin-top:12px;font-weight:300}
+.ft-col h4{color:#475569;font-size:10px;letter-spacing:2px;margin-bottom:14px;font-weight:600}
+.ft-col a{display:block;color:#475569;text-decoration:none;font-size:13px;
+  margin-bottom:8px;transition:color .15s;cursor:pointer}
+.ft-col a:hover{color:var(--org)}
+.ft-bottom{border-top:1px solid rgba(255,255,255,0.05);padding-top:18px;
+  display:flex;align-items:center;justify-content:space-between}
+.ft-bottom p{font-size:11px;color:#334155}
+.ft-badge{background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);
+  border-radius:12px;padding:3px 12px;font-size:10px;color:var(--org)}
+.cta-band{background:linear-gradient(135deg,var(--org),#F97316dd);
+  padding:64px 2rem;text-align:center}
+.cta-band h2{color:#fff;font-size:36px;font-weight:800;margin-bottom:12px;letter-spacing:-1px}
+.cta-band p{color:rgba(255,255,255,0.8);font-size:15px;margin-bottom:32px}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta-wh{background:#fff;color:var(--org);border:none;border-radius:10px;
+  padding:13px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif}
+.cta-dk{background:var(--dk);color:#fff;border:none;border-radius:10px;
+  padding:13px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif}
+
+/* GEO STATUS */
+.geo-status{padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:12px;display:none}
+.geo-status.ok{background:#DCFCE7;border:1px solid #86EFAC;color:var(--grn2);display:block}
+.geo-status.err{background:#FEE2E2;border:1px solid #FCA5A5;color:var(--red);display:block}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  .hero-inner{grid-template-columns:1fr}.map-box{display:none}
+  .reg-layout,.search-layout,.dash-wrap,.ft-top{grid-template-columns:1fr}
+  .dash-side{display:none}
+  .lt-hd,.lt-row{grid-template-columns:2fr 1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand" onclick="show('home')">
+    <div class="nav-ico">🛵</div>
+    <div class="nav-name">DELIVR<span>'SN</span></div>
+  </div>
+  <div class="nav-tabs">
+    <button class="ntab on" onclick="show('home',this)">Accueil</button>
+    <button class="ntab" onclick="show('how',this)">Comment ça marche</button>
+    <button class="ntab" onclick="show('search',this)">Trouver un livreur</button>
+    <button class="ntab" onclick="show('register',this)">Devenir livreur</button>
+    <button class="ntab" onclick="show('dashboard',this)">Mon espace</button>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-livreur" onclick="show('register')">🛵 Je livre</button>
+    <button class="btn-client" onclick="show('search')">📦 Je commande</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     ACCUEIL
+═════════════════════════════════════════════ -->
+<div id="pg-home" class="pg on">
+  <section class="hero">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">🇸🇳 DAKAR · SÉNÉGAL · LIVRAISON EXPRESS</div>
+        <h1>Le <span>Uber</span> des<br>2-Roues au<br>Sénégal</h1>
+        <p class="hero-sub">Scooters & tricycles géolocalisés en temps réel. Livraison express pour restaurants, commerces et particuliers à Dakar. Rapide, fiable, abordable.</p>
+        <div class="hero-btns">
+          <button class="hbtn-org" onclick="show('search')">📦 Commander une livraison</button>
+          <button class="hbtn-grn" onclick="show('register')">🛵 Devenir livreur</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><div class="hstat-v">30 min</div><div class="hstat-l">Délai moyen livraison</div></div>
+          <div class="hstat"><div class="hstat-v">200+</div><div class="hstat-l">Livreurs actifs</div></div>
+          <div class="hstat"><div class="hstat-v">24/7</div><div class="hstat-l">Disponibilité</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="map-box">
+          <div class="map-header">
+            <div class="map-title">🗺️ Livreurs en temps réel — Dakar</div>
+            <div class="map-live">12 livreurs actifs</div>
+          </div>
+          <div class="map-area" id="map-area">
+            <div class="map-road h" style="top:35%"></div>
+            <div class="map-road h" style="top:65%"></div>
+            <div class="map-road v" style="left:30%"></div>
+            <div class="map-road v" style="left:60%"></div>
+            <div class="map-pin org" style="top:30%;left:25%"><span style="font-size:14px">🛵</span><div class="map-label">Mamadou</div></div>
+            <div class="map-pin grn" style="top:50%;left:55%"><span style="font-size:14px">🛵</span><div class="map-label">Ibrahima</div></div>
+            <div class="map-pin org" style="top:70%;left:40%"><span style="font-size:14px">🛺</span><div class="map-label">Omar</div></div>
+            <div class="map-pin yl" style="top:20%;left:70%"><span style="font-size:14px">🛵</span><div class="map-label">Fatou</div></div>
+            <div class="map-pin grn" style="top:60%;left:80%"><span style="font-size:14px">🛺</span><div class="map-label">Seydou</div></div>
+          </div>
+          <div class="map-footer">
+            <div class="map-stat"><div class="map-stat-v">8</div><div class="map-stat-l">Scooters disponibles</div></div>
+            <div class="map-stat"><div class="map-stat-v">4</div><div class="map-stat-l">Tricycles disponibles</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHIFFRES -->
+  <section class="sec" style="background:#fff">
+    <div class="sec-inner">
+      <div class="sec-hd c">
+        <div class="sec-tag">POURQUOI DELIVR'SN ?</div>
+        <h2 class="sec-title">La livraison réinventée à Dakar</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+        <div style="background:var(--lg);border-radius:14px;border-left:4px solid var(--org);padding:22px">
+          <div style="font-size:28px;margin-bottom:10px">⚡</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">Ultra Rapide</div>
+          <div style="font-size:13px;color:var(--gr);line-height:1.6;font-weight:300">Livraison garantie en 30 minutes dans Dakar. Tracking temps réel sur carte.</div>
+        </div>
+        <div style="background:var(--lg);border-radius:14px;border-left:4px solid var(--grn);padding:22px">
+          <div style="font-size:28px;margin-bottom:10px">📍</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">Géolocalisation Live</div>
+          <div style="font-size:13px;color:var(--gr);line-height:1.6;font-weight:300">Suivez votre livreur en temps réel sur la carte. Estimation précise d'arrivée.</div>
+        </div>
+        <div style="background:var(--lg);border-radius:14px;border-left:4px solid var(--org);padding:22px">
+          <div style="font-size:28px;margin-bottom:10px">🏪</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">Tous secteurs</div>
+          <div style="font-size:13px;color:var(--gr);line-height:1.6;font-weight:300">Restaurants, e-commerce, pharmacies, particuliers. Colis, repas, documents, courses.</div>
+        </div>
+        <div style="background:var(--lg);border-radius:14px;border-left:4px solid var(--grn);padding:22px">
+          <div style="font-size:28px;margin-bottom:10px">💰</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">Tarifs clairs</div>
+          <div style="font-size:13px;color:var(--gr);line-height:1.6;font-weight:300">Prix fixé à l'avance. Paiement Mobile Money (Wave, Orange Money) ou espèces.</div>
+        </div>
+        <div style="background:var(--lg);border-radius:14px;border-left:4px solid var(--org);padding:22px">
+          <div style="font-size:28px;margin-bottom:10px">⭐</div>
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px">Livreurs vérifiés</div>
+          <div style="font-size:13px;color:var(--gr);line-height:1.6;font-weight:300">Tous nos livreurs sont identifiés, notés et suivis. Assurance incluse.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cta-band">
+    <h2>Prêt à livrer ou être livré ?</h2>
+    <p>Rejoignez la communauté DELIVR'SN — Dakar & bientôt toute la zone UEMOA.</p>
+    <div class="cta-btns">
+      <button class="cta-wh" onclick="show('register')">🛵 Devenir livreur</button>
+      <button class="cta-dk" onclick="show('search')">📦 Commander maintenant</button>
+    </div>
+  </div>
+  <footer>
+    <div class="ft-inner">
+      <div class="ft-top">
+        <div class="ft-brand">
+          <div style="display:flex;align-items:center;gap:10px"><div class="nav-ico">🛵</div><div class="nav-name" style="color:#fff;font-family:Sora,sans-serif">DELIVR<span style="color:var(--org)">'SN</span></div></div>
+          <p>Le Uber des 2-roues au Sénégal. Livraison express géolocalisée pour restaurants, commerces et particuliers à Dakar.</p>
+        </div>
+        <div class="ft-col"><h4>SERVICES</h4><a onclick="show('search')">Livraison express</a><a onclick="show('search')">Livraison programmée</a><a onclick="show('search')">Tricycles gros colis</a></div>
+        <div class="ft-col"><h4>LIVREURS</h4><a onclick="show('register')">S'inscrire</a><a onclick="show('dashboard')">Mon espace</a><a onclick="show('how')">Comment ça marche</a></div>
+        <div class="ft-col"><h4>CONTACT</h4><a href="#">+221 78 737 13 65</a><a href="#">delivrsn@email.com</a><a href="#">Dakar, Sénégal</a></div>
+      </div>
+      <div class="ft-bottom">
+        <p>© 2026 DELIVR'SN — Dakar, Sénégal</p>
+        <div class="ft-badge">Géolocalisation Live · Mobile Money</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════
+     COMMENT ÇA MARCHE
+═════════════════════════════════════════════ -->
+<div id="pg-how" class="pg">
+  <section class="sec">
+    <div class="sec-inner">
+      <div class="sec-hd c">
+        <div class="sec-tag">GUIDE COMPLET</div>
+        <h2 class="sec-title">Comment ça marche ?</h2>
+        <p class="sec-sub">Deux parcours simples : vous commandez une livraison, ou vous devenez livreur.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+        <!-- Client -->
+        <div>
+          <div style="background:rgba(249,115,22,0.06);border:1.5px solid rgba(249,115,22,0.2);border-radius:14px;padding:20px 24px;margin-bottom:20px">
+            <div style="font-size:22px;margin-bottom:6px">📦</div>
+            <div style="font-size:17px;font-weight:800;color:var(--dk)">Je veux faire livrer</div>
+            <div style="font-size:13px;color:var(--gr);font-weight:300">Restaurant, commerce ou particulier</div>
+          </div>
+          <div class="steps" style="grid-template-columns:1fr">
+            <div class="step"><div class="step-num" style="background:rgba(249,115,22,0.1);color:var(--org)">1</div><div class="step-ico">📍</div><div class="step-title">Saisissez l'adresse de collecte</div><div class="step-desc">Indiquez d'où partir et où livrer. Estimez le poids du colis. Obtenez un tarif instantané.</div></div>
+            <div class="step"><div class="step-num" style="background:rgba(249,115,22,0.1);color:var(--org)">2</div><div class="step-ico">🗺️</div><div class="step-title">Choisissez votre livreur</div><div class="step-desc">Voyez les livreurs disponibles près de vous sur la carte. Consultez les avis et notations.</div></div>
+            <div class="step"><div class="step-num" style="background:rgba(249,115,22,0.1);color:var(--org)">3</div><div class="step-ico">📱</div><div class="step-title">Suivez en temps réel</div><div class="step-desc">Tracking GPS live jusqu'à la livraison. Notification WhatsApp à chaque étape.</div></div>
+            <div class="step"><div class="step-num" style="background:rgba(249,115,22,0.1);color:var(--org)">4</div><div class="step-ico">💳</div><div class="step-title">Payez facilement</div><div class="step-desc">Wave, Orange Money ou espèces à la livraison. Facture automatique par SMS/email.</div></div>
+          </div>
+        </div>
+        <!-- Livreur -->
+        <div>
+          <div style="background:rgba(34,197,94,0.06);border:1.5px solid rgba(34,197,94,0.2);border-radius:14px;padding:20px 24px;margin-bottom:20px">
+            <div style="font-size:22px;margin-bottom:6px">🛵</div>
+            <div style="font-size:17px;font-weight:800;color:var(--dk)">Je veux livrer</div>
+            <div style="font-size:13px;color:var(--gr);font-weight:300">Scooter ou tricycle, à temps plein ou partiel</div>
+          </div>
+          <div class="steps" style="grid-template-columns:1fr">
+            <div class="step"><div class="step-num" style="background:rgba(34,197,94,0.1);color:var(--grn2)">1</div><div class="step-ico">📋</div><div class="step-title">Inscrivez-vous en ligne</div><div class="step-desc">Formulaire rapide : infos perso, véhicule, photo CNI. Inscription validée en 24h.</div></div>
+            <div class="step"><div class="step-num" style="background:rgba(34,197,94,0.1);color:var(--grn2)">2</div><div class="step-ico">✅</div><div class="step-title">Vérification & activation</div><div class="step-desc">Vérification des documents. Activation de votre profil géolocalisé sur la plateforme.</div></div>
+            <div class="step"><div class="step-num" style="background:rgba(34,197,94,0.1);color:var(--grn2)">3</div><div class="step-ico">📲</div><div class="step-title">Recevez des commandes</div><div class="step-desc">Activez votre statut "disponible". Recevez les demandes de livraison près de vous.</div></div>
+            <div class="step"><div class="step-num" style="background:rgba(34,197,94,0.1);color:var(--grn2)">4</div><div class="step-ico">💰</div><div class="step-title">Gagnez chaque jour</div><div class="step-desc">Paiement quotidien via Wave. 70 % des frais de livraison vous reviennent.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TARIFS -->
+      <div style="margin-top:48px">
+        <div class="sec-hd c"><div class="sec-tag">TARIFICATION</div><h2 class="sec-title">Tarifs transparents</h2></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+          <div style="background:#fff;border:1px solid var(--bd);border-radius:14px;padding:22px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">🛵</div>
+            <div style="font-size:13px;color:var(--gr);margin-bottom:12px">Scooter · Colis léger</div>
+            <div style="font-size:26px;font-weight:800;color:var(--org)">1 000 CFA</div>
+            <div style="font-size:11px;color:var(--gr)">jusqu'à 5 km</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--bd);border-radius:14px;padding:22px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">🛺</div>
+            <div style="font-size:13px;color:var(--gr);margin-bottom:12px">Tricycle · Gros colis</div>
+            <div style="font-size:26px;font-weight:800;color:var(--org)">2 500 CFA</div>
+            <div style="font-size:11px;color:var(--gr)">jusqu'à 5 km</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--bd);border-radius:14px;padding:22px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">🍔</div>
+            <div style="font-size:13px;color:var(--gr);margin-bottom:12px">Restaurant · Repas</div>
+            <div style="font-size:26px;font-weight:800;color:var(--org)">800 CFA</div>
+            <div style="font-size:11px;color:var(--gr)">livraison chaud</div>
+          </div>
+          <div style="background:#fff;border:1px solid var(--bd);border-radius:14px;padding:22px;text-align:center">
+            <div style="font-size:28px;margin-bottom:8px">📅</div>
+            <div style="font-size:13px;color:var(--gr);margin-bottom:12px">Abonnement Société</div>
+            <div style="font-size:26px;font-weight:800;color:var(--org)">50 000 CFA</div>
+            <div style="font-size:11px;color:var(--gr)">20 livraisons/mois</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TROUVER UN LIVREUR
+═════════════════════════════════════════════ -->
+<div id="pg-search" class="pg">
+  <section class="sec">
+    <div class="sec-inner">
+      <div class="sec-hd c">
+        <div class="sec-tag">COMMANDER</div>
+        <h2 class="sec-title">Trouvez un livreur maintenant</h2>
+        <p class="sec-sub">Restaurants, e-commerçants, particuliers — trouvez un livreur disponible en quelques secondes.</p>
+      </div>
+      <div class="search-layout">
+        <!-- Panneau de recherche -->
+        <div>
+          <div class="search-panel">
+            <div class="search-title">🔍 Votre demande</div>
+            <div class="search-sub">Précisez votre besoin pour trouver le bon livreur.</div>
+
+            <div style="font-size:11px;font-weight:600;color:var(--dk);margin-bottom:8px">TYPE DE CLIENT</div>
+            <div class="type-tabs" id="type-tabs">
+              <button class="type-tab on" onclick="setType(this,'Restaurant')">🍔 Restaurant</button>
+              <button class="type-tab" onclick="setType(this,'Boutique')">🏪 Boutique</button>
+              <button class="type-tab" onclick="setType(this,'E-commerce')">🛒 E-commerce</button>
+              <button class="type-tab" onclick="setType(this,'Particulier')">👤 Particulier</button>
+            </div>
+
+            <div style="font-size:11px;font-weight:600;color:var(--dk);margin-bottom:8px">URGENCE</div>
+            <div class="urgency-slider">
+              <button class="urg-btn on now" onclick="setUrg(this,'now')">🔴 Maintenant</button>
+              <button class="urg-btn prog" onclick="setUrg(this,'prog')">🟡 Dans 1h</button>
+              <button class="urg-btn sched" onclick="setUrg(this,'sched')">🟢 Programmé</button>
+            </div>
+
+            <div class="f-grp"><label class="f-lbl">📍 Adresse de collecte</label>
+              <input id="s-from" class="f-inp" placeholder="Ex: Plateau, rue Vincens, Dakar"></div>
+            <div class="f-grp"><label class="f-lbl">🏁 Adresse de livraison</label>
+              <input id="s-to" class="f-inp" placeholder="Ex: Almadies, villa 42"></div>
+
+            <div class="f-row">
+              <div class="f-grp"><label class="f-lbl">📦 Type de colis</label>
+                <select class="f-sel">
+                  <option>Colis standard</option><option>Repas / nourriture</option>
+                  <option>Document urgent</option><option>Gros colis (tricycle)</option>
+                  <option>Médicaments</option></select></div>
+              <div class="f-grp"><label class="f-lbl">⚖️ Poids estimé</label>
+                <select class="f-sel"><option>< 2 kg</option><option>2–5 kg</option>
+                  <option>5–20 kg</option><option>> 20 kg (tricycle)</option></select></div>
+            </div>
+
+            <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:10px;padding:14px;margin-bottom:16px">
+              <div style="font-size:11px;color:var(--org);font-weight:700;margin-bottom:4px">💰 ESTIMATION TARIFAIRE</div>
+              <div style="font-size:20px;font-weight:800;color:var(--dk)" id="price-est">1 500 CFA</div>
+              <div style="font-size:11px;color:var(--gr)">selon distance et poids</div>
+            </div>
+
+            <button class="submit-org" onclick="searchLivreurs()">
+              <span>🔍 Rechercher des livreurs disponibles</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Résultats -->
+        <div>
+          <div class="results-map">
+            <div class="results-header">
+              <div class="results-title">🗺️ Livreurs disponibles — Dakar</div>
+              <div class="results-count" id="res-count">5 livreurs proches</div>
+            </div>
+            <div class="live-map">
+              <div class="map-road h" style="top:40%"></div>
+              <div class="map-road h" style="top:70%"></div>
+              <div class="map-road v" style="left:35%"></div>
+              <div class="map-road v" style="left:65%"></div>
+              <div class="map-pin org" style="top:25%;left:20%"><span>🛵</span></div>
+              <div class="map-pin grn" style="top:45%;left:50%"><span>🛵</span></div>
+              <div class="map-pin org" style="top:65%;left:75%"><span>🛺</span></div>
+              <div class="map-pin grn" style="top:30%;left:70%"><span>🛵</span></div>
+              <div class="map-pin yl" style="top:75%;left:30%"><span>🛵</span></div>
+            </div>
+            <div class="livreur-cards" id="livreur-cards">
+              <div style="text-align:center;padding:20px;color:#475569;font-size:13px">
+                🔍 Lancez une recherche pour voir les livreurs disponibles
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     INSCRIPTION LIVREUR
+═════════════════════════════════════════════ -->
+<div id="pg-register" class="pg">
+  <section class="sec">
+    <div class="sec-inner">
+      <div class="sec-hd c">
+        <div class="sec-tag">INSCRIPTION LIVREUR</div>
+        <h2 class="sec-title">Rejoignez DELIVR'SN</h2>
+        <p class="sec-sub">Inscrivez-vous en 5 minutes. Activez votre profil et commencez à gagner dès aujourd'hui.</p>
+      </div>
+      <div class="reg-layout">
+        <div>
+          <div class="reg-info">
+            <div class="reg-info-title">🛵 Pourquoi livrer avec nous ?</div>
+            <div class="reg-info-sub">Gagnez votre vie à votre rythme. Liberté totale de vos horaires et secteur de livraison.</div>
+            <ul class="reg-perks">
+              <li><div class="pk-ico">💰</div><div><div class="pk-t">Revenus quotidiens</div><div class="pk-s">70 % de chaque course. Paiement via Wave chaque soir.</div></div></li>
+              <li><div class="pk-ico">⏰</div><div><div class="pk-t">Horaires flexibles</div><div class="pk-s">Travaillez quand vous voulez. Aucune contrainte.</div></div></li>
+              <li><div class="pk-ico">📍</div><div><div class="pk-t">Zone de votre choix</div><div class="pk-s">Définissez votre rayon d'action dans Dakar.</div></div></li>
+              <li><div class="pk-ico">🛡️</div><div><div class="pk-t">Assurance incluse</div><div class="pk-s">Couverture accident pendant les livraisons.</div></div></li>
+              <li><div class="pk-ico">⭐</div><div><div class="pk-t">Profil noté & visible</div><div class="pk-s">Bonne note = plus de commandes. Gagnez plus.</div></div></li>
+            </ul>
+            <div style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:10px;padding:14px;margin-top:16px">
+              <div style="font-size:11px;color:var(--org);font-weight:700;margin-bottom:4px">💵 REVENUS ESTIMÉS</div>
+              <div style="font-size:22px;font-weight:800;color:#fff">15 000 – 45 000 CFA/jour</div>
+              <div style="font-size:11px;color:#94A3B8;margin-top:3px">selon activité et zone</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="reg-form" id="reg-form-wrap">
+            <div class="form-title">📋 Formulaire d'inscription</div>
+            <div class="form-sub">Inscription automatique — validée sous 24h.</div>
+
+            <div class="f-row">
+              <div class="f-grp"><label class="f-lbl">Prénom *</label><input id="r-prenom" class="f-inp" placeholder="Votre prénom"></div>
+              <div class="f-grp"><label class="f-lbl">Nom *</label><input id="r-nom" class="f-inp" placeholder="Votre nom"></div>
+            </div>
+            <div class="f-row">
+              <div class="f-grp"><label class="f-lbl">Téléphone / WhatsApp *</label><input id="r-tel" class="f-inp" placeholder="+221 ..."></div>
+              <div class="f-grp"><label class="f-lbl">Email</label><input id="r-email" class="f-inp" placeholder="votre@email.com"></div>
+            </div>
+            <div class="f-grp"><label class="f-lbl">Adresse / Quartier *</label>
+              <input id="r-adresse" class="f-inp" placeholder="Ex: Sicap Mermoz, Dakar"></div>
+
+            <div style="font-size:12px;font-weight:600;color:var(--dk);margin-bottom:8px">TYPE DE VÉHICULE *</div>
+            <div class="vehicle-selector">
+              <div class="veh-opt sel" id="veh-scooter" onclick="selectVeh('scooter')">
+                <div class="veh-ico">🛵</div>
+                <div class="veh-lbl">Scooter / Moto</div>
+                <div class="veh-sub">Colis légers, repas</div>
+              </div>
+              <div class="veh-opt" id="veh-tricycle" onclick="selectVeh('tricycle')">
+                <div class="veh-ico">🛺</div>
+                <div class="veh-lbl">Tricycle</div>
+                <div class="veh-sub">Gros colis, meuble</div>
+              </div>
+            </div>
+
+            <div class="f-row">
+              <div class="f-grp"><label class="f-lbl">Numéro CNI *</label><input id="r-cni" class="f-inp" placeholder="1 23 45 678 901 234 56"></div>
+              <div class="f-grp"><label class="f-lbl">Permis de conduire</label><input id="r-permis" class="f-inp" placeholder="Numéro permis"></div>
+            </div>
+
+            <div class="f-grp">
+              <label class="f-lbl">Zone de livraison préférée *</label>
+              <select id="r-zone" class="f-sel">
+                <option value="">Sélectionner...</option>
+                <option>Plateau / Centre-Ville</option><option>Almadies / Ngor</option>
+                <option>Sacré-Cœur / Mermoz</option><option>Point E / Fann</option>
+                <option>Yoff / Ouakam</option><option>Parcelles Assainies</option>
+                <option>Pikine / Guédiawaye</option><option>Toute la région Dakar</option>
+              </select>
+            </div>
+
+            <div class="f-grp">
+              <label class="f-lbl">Numéro Wave (paiements) *</label>
+              <input id="r-wave" class="f-inp" placeholder="+221 ..."></div>
+
+            <div id="geo-status" class="geo-status"></div>
+            <button class="geo-btn" onclick="getLocation()">
+              📍 Activer ma géolocalisation
+            </button>
+
+            <div id="reg-error" style="display:none;background:#FEE2E2;border:1px solid #FCA5A5;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--red)"></div>
+
+            <button class="submit-grn" onclick="submitRegistration()">
+              ✅ Créer mon profil livreur →
+            </button>
+            <p style="font-size:11px;color:var(--gr);text-align:center;margin-top:10px">
+              Activation sous 24h · Paiement Wave quotidien · Assurance incluse
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════
+     DASHBOARD LIVREUR
+═════════════════════════════════════════════ -->
+<div id="pg-dashboard" class="pg">
+  <section class="sec">
+    <div class="sec-inner">
+      <div class="sec-hd">
+        <div class="sec-tag">MON ESPACE LIVREUR</div>
+        <h2 class="sec-title">Tableau de Bord</h2>
+      </div>
+      <div class="dash-wrap">
+        <div class="dash-side">
+          <div class="dash-user">
+            <div class="dash-av">MS</div>
+            <div><div class="dash-un">Mamadou Sarr</div><div class="dash-ur">Livreur Scooter · ⭐ 4.8</div></div>
+          </div>
+          <div class="dash-mi on"><span class="dash-mi-ico">📊</span>Tableau de bord</div>
+          <div class="dash-mi"><span class="dash-mi-ico">📦</span>Mes livraisons</div>
+          <div class="dash-mi"><span class="dash-mi-ico">💰</span>Mes gains</div>
+          <div class="dash-mi"><span class="dash-mi-ico">📍</span>Ma zone</div>
+          <div class="dash-mi"><span class="dash-mi-ico">⭐</span>Mes avis</div>
+          <div class="dash-mi"><span class="dash-mi-ico">⚙️</span>Paramètres</div>
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.07)">
+            <div style="font-size:10px;color:#334155;margin-bottom:8px;letter-spacing:1px">STATUT</div>
+            <div class="toggle-status">
+              <div class="toggle" id="main-toggle" onclick="toggleStatus()"></div>
+              <div class="toggle-lbl" id="toggle-lbl" style="color:var(--grn);font-size:12px;font-weight:600">Disponible</div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-main">
+          <div class="dash-topbar">
+            <div class="dash-greeting">Bonjour, Mamadou 🛵</div>
+            <div class="toggle-status" style="gap:10px">
+              <div style="font-size:12px;color:var(--gr)">Statut :</div>
+              <div class="toggle" id="top-toggle" onclick="toggleStatus()"></div>
+              <div style="font-size:12px;color:var(--grn);font-weight:600" id="top-lbl">🟢 En ligne</div>
+            </div>
+          </div>
+          <div class="dash-kpis">
+            <div class="dk-card"><div class="dk-v">8</div><div class="dk-l">Livraisons aujourd'hui</div><div class="dk-d pos">↑ +2 vs hier</div></div>
+            <div class="dk-card"><div class="dk-v">12 400</div><div class="dk-l">CFA gagnés aujourd'hui</div><div class="dk-d pos">↑ +15%</div></div>
+            <div class="dk-card"><div class="dk-v">4.8</div><div class="dk-l">Note moyenne</div><div class="dk-d pos">⭐ Top livreur</div></div>
+            <div class="dk-card"><div class="dk-v">47 km</div><div class="dk-l">Distance parcourue</div><div class="dk-d" style="color:var(--gr)">Ce mois</div></div>
+          </div>
+          <div class="livraisons-table">
+            <div class="lt-hd">
+              <div class="lt-th">COMMANDE</div><div class="lt-th">CLIENT</div>
+              <div class="lt-th">HEURE</div><div class="lt-th">GAIN</div><div class="lt-th">STATUT</div>
+            </div>
+            <div class="lt-row"><div class="lt-cell"><strong>#LV2847</strong><br><span class="lt-cell m">Plateau → Mermoz</span></div><div class="lt-cell m">Restaurant Teranga</div><div class="lt-cell m">14:32</div><div class="lt-cell" style="color:var(--grn);font-weight:700">1 400 CFA</div><div class="lt-cell"><span class="st done">Livré ✓</span></div></div>
+            <div class="lt-row"><div class="lt-cell"><strong>#LV2846</strong><br><span class="lt-cell m">Almadies → Yoff</span></div><div class="lt-cell m">Mme Fatou Diallo</div><div class="lt-cell m">13:15</div><div class="lt-cell" style="color:var(--grn);font-weight:700">2 100 CFA</div><div class="lt-cell"><span class="st done">Livré ✓</span></div></div>
+            <div class="lt-row"><div class="lt-cell"><strong>#LV2848</strong><br><span class="lt-cell m">Point E → Sacré-Cœur</span></div><div class="lt-cell m">Pharma Express</div><div class="lt-cell m">15:00</div><div class="lt-cell" style="color:var(--yl);font-weight:700">900 CFA</div><div class="lt-cell"><span class="st go">En cours</span></div></div>
+            <div class="lt-row"><div class="lt-cell"><strong>#LV2849</strong><br><span class="lt-cell m">Fann → Ouakam</span></div><div class="lt-cell m">E-Shop Dakar</div><div class="lt-cell m">15:30</div><div class="lt-cell" style="color:var(--gr);font-weight:700">1 800 CFA</div><div class="lt-cell"><span class="st wait">En attente</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+let selVeh='scooter',selType='Restaurant',selUrg='now',isOnline=true;
+let geoCoords=null;
+
+function show(id,btn){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('on'));
+  const p=document.getElementById('pg-'+id);if(p)p.classList.add('on');
+  if(btn)btn.classList.add('on');
+  else{const m={home:0,how:1,search:2,register:3,dashboard:4};
+    const bs=document.querySelectorAll('.ntab');if(bs[m[id]])bs[m[id]].classList.add('on');}
+  window.scrollTo(0,0);
+}
+
+function selectVeh(v){
+  selVeh=v;
+  document.querySelectorAll('.veh-opt').forEach(el=>el.classList.remove('sel'));
+  document.getElementById('veh-'+v).classList.add('sel');
+}
+
+function setType(btn,t){
+  selType=t;
+  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  updatePrice();
+}
+
+function setUrg(btn,u){
+  selUrg=u;
+  document.querySelectorAll('.urg-btn').forEach(b=>b.classList.remove('on','now','prog','sched'));
+  btn.classList.add('on',u);
+  updatePrice();
+}
+
+function updatePrice(){
+  const prices={Restaurant:800,Boutique:1500,Particulier:1200,'E-commerce':2000};
+  const el=document.getElementById('price-est');
+  if(el)el.textContent=(prices[selType]||1500).toLocaleString('fr-SN')+' CFA';
+}
+
+function getLocation(){
+  const st=document.getElementById('geo-status');
+  if(navigator.geolocation){
+    st.className='geo-status';
+    navigator.geolocation.getCurrentPosition(pos=>{
+      geoCoords={lat:pos.coords.latitude,lng:pos.coords.longitude};
+      st.className='geo-status ok';
+      st.textContent=`✅ Position détectée : ${geoCoords.lat.toFixed(4)}, ${geoCoords.lng.toFixed(4)} — Rayon actif`;
+    },err=>{
+      st.className='geo-status err';
+      st.textContent='⚠️ Géolocalisation refusée. Activez-la dans votre navigateur.';
+    });
+  }else{
+    st.className='geo-status err';
+    st.textContent='❌ Géolocalisation non supportée par ce navigateur.';
+  }
+}
+
+function searchLivreurs(){
+  const from=document.getElementById('s-from').value;
+  const to=document.getElementById('s-to').value;
+  const cards=document.getElementById('livreur-cards');
+  const cnt=document.getElementById('res-count');
+  const livreurs=[
+    {init:'MS',name:'Mamadou Sarr',info:'Scooter · Plateau',dist:'0.8 km',rating:'⭐ 4.9',status:'dispo',color:'#F97316'},
+    {init:'IB',name:'Ibrahima Ba',info:'Scooter · Almadies',dist:'1.2 km',rating:'⭐ 4.7',status:'dispo',color:'#22C55E'},
+    {init:'OM',name:'Omar Diop',info:'Tricycle · Mermoz',dist:'1.8 km',rating:'⭐ 4.8',status:'busy',color:'#6366F1'},
+    {init:'FN',name:'Fatou Ndiaye',info:'Scooter · Fann',dist:'2.1 km',rating:'⭐ 4.6',status:'dispo',color:'#EC4899'},
+    {init:'SK',name:'Seydou Kane',info:'Tricycle · Sicap',dist:'2.4 km',rating:'⭐ 4.5',status:'dispo',color:'#EAB308'},
+  ];
+  cnt.textContent=livreurs.length+' livreurs proches';
+  cards.innerHTML=livreurs.map(l=>`
+    <div class="lcard">
+      <div class="lcard-avatar" style="background:${l.color}">${l.init}</div>
+      <div style="flex:1">
+        <div class="lcard-name">${l.name}</div>
+        <div class="lcard-info">${l.info} · <span class="lcard-dist">${l.dist}</span> · <span class="lcard-rating">${l.rating}</span></div>
+        <span class="lcard-badge ${l.status==='dispo'?'badge-dispo':'badge-busy'}">${l.status==='dispo'?'✓ Disponible':'En livraison'}</span>
+      </div>
+      <div class="lcard-actions">
+        <button class="btn-contact" onclick="contactLivreur('${l.name}')">📱 Contacter</button>
+        <button class="btn-track">📍 Tracker</button>
+      </div>
+    </div>`).join('');
+}
+
+function contactLivreur(name){
+  const from=document.getElementById('s-from').value||'Non précisé';
+  const to=document.getElementById('s-to').value||'Non précisé';
+  const msg=encodeURIComponent(`🛵 *DELIVR'SN — Demande de livraison*\n\n📦 *Livreur :* ${name}\n📍 *Collecte :* ${from}\n🏁 *Livraison :* ${to}\n🕐 *Urgence :* ${selUrg==='now'?'Maintenant':selUrg==='prog'?'Dans 1h':'Programmé'}\n🏪 *Type :* ${selType}\n\n_Envoyé depuis DELIVR'SN_`);
+  window.open('https://wa.me/221787371365?text='+msg,'_blank');
+}
+
+function submitRegistration(){
+  const p=document.getElementById('r-prenom').value;
+  const n=document.getElementById('r-nom').value;
+  const t=document.getElementById('r-tel').value;
+  const z=document.getElementById('r-zone').value;
+  const w=document.getElementById('r-wave').value;
+  const errEl=document.getElementById('reg-error');
+  if(!p||!n||!t||!z||!w){
+    errEl.style.display='block';
+    errEl.textContent='⚠️ Veuillez remplir tous les champs obligatoires (*)';
+    return;
+  }
+  errEl.style.display='none';
+  const msg=encodeURIComponent(`🛵 *NOUVEAU LIVREUR — DELIVR'SN*\n\n👤 *Nom :* ${p} ${n}\n📱 *Tél :* ${t}\n🚗 *Véhicule :* ${selVeh==='scooter'?'🛵 Scooter':'🛺 Tricycle'}\n📍 *Zone :* ${z}\n💰 *Wave :* ${w}\n📅 *Date :* ${new Date().toLocaleDateString('fr-SN')}\n\n✅ Vérification requise sous 24h`);
+  window.open('https://wa.me/221787371365?text='+msg,'_blank');
+  document.getElementById('reg-form-wrap').innerHTML=`
+    <div class="success-box">
+      <div class="success-ico">🎉</div>
+      <div class="success-t">Inscription envoyée !</div>
+      <div class="success-s">Votre demande a été transmise à l'équipe DELIVR'SN via WhatsApp.</div>
+      <div class="success-card">
+        <div class="sc-lbl">LIVREUR</div><div class="sc-val">${p} ${n} · ${t}</div>
+        <div class="sc-lbl" style="margin-top:10px">VÉHICULE</div><div class="sc-val">${selVeh==='scooter'?'🛵 Scooter / Moto':'🛺 Tricycle'}</div>
+        <div class="sc-lbl" style="margin-top:10px">ZONE</div><div class="sc-val">${z}</div>
+        <div class="sc-lbl" style="margin-top:10px">STATUT</div><div class="sc-val" style="color:var(--yl)">⏳ Vérification en cours — sous 24h</div>
+      </div>
+      <button class="reset-btn" onclick="location.reload()">Nouvelle inscription</button>
+    </div>`;
+}
+
+function toggleStatus(){
+  isOnline=!isOnline;
+  ['main-toggle','top-toggle'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.toggle('off',!isOnline);}
+  });
+  const ml=document.getElementById('toggle-lbl');
+  const tl=document.getElementById('top-lbl');
+  if(ml){ml.style.color=isOnline?'var(--grn)':'var(--gr)';ml.textContent=isOnline?'Disponible':'Hors ligne';}
+  if(tl){tl.textContent=isOnline?'🟢 En ligne':'⚫ Hors ligne';}
+}
+
+// Animate map pins
+document.querySelectorAll('.map-pin').forEach((pin,i)=>{
+  pin.style.animationDelay=(i*0.4)+'s';
+});
+</script>
+</body>
+</html>
